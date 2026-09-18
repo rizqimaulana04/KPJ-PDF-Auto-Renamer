@@ -8,15 +8,18 @@ st.title("KPJ PDF Auto Renamer")
 st.caption("Rename file PDF otomatis berdasarkan Nomor KPJ dan data Excel.")
 st.info("Upload dokumen, periksa kolom Excel, lalu proses. PDF asli tetap disertakan jika tidak cocok atau gagal dibaca.")
 if st.button("Bersihkan sesi", help="Hapus input dan hasil dari sesi aplikasi ini."):
+    next_generation = st.session_state.get("upload_generation", 0) + 1
     for key in list(st.session_state):
         del st.session_state[key]
+    st.session_state["upload_generation"] = next_generation
     st.rerun()
 
+generation = st.session_state.get("upload_generation", 0)
 left, right = st.columns(2)
 with left:
-    zip_upload = st.file_uploader("1. Upload ZIP", type=["zip"], key="zip_input")
+    zip_upload = st.file_uploader("1. Upload ZIP", type=["zip"], key=f"zip_input_{generation}")
 with right:
-    excel_upload = st.file_uploader("2. Upload Excel", type=["xlsx", "xls"], key="excel_input")
+    excel_upload = st.file_uploader("2. Upload Excel", type=["xlsx", "xls"], key=f"excel_input_{generation}")
 st.caption("Maks. upload 100 MB/file • 2.000 PDF/batch • 30 MB/PDF • total PDF setelah dekompresi 250 MB. PDF scan memerlukan OCR (nonaktif).")
 
 if excel_upload is None:
